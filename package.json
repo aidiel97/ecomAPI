@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "concurrently -k -r -s first \"npm run dev:server\" \"npm run lint:watch\"",
     "dev:server": "NODE_ENV=development nodemon src/server.js",
-    "start": "src/server.js",
+    "start": "node src/server.js",
     "lint": "esw . --config=.eslintrc.js",
     "lint:watch": "npm run lint -- --watch"
   },
