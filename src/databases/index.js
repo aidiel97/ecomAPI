@@ -9,7 +9,7 @@ mongoose.connect(process.env.DB_CONNECTION,
     useUnifiedTopology: true,
   })
   .then(() => {
-    console.log('DB connected!');
+    console.log('Database connected!');
   })
   .catch((error) => {
     console.log('error', error);

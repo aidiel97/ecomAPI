@@ -7,6 +7,7 @@ const port = process.env.PORT || 5000;
 
 const userRoutes = require('./routes/users');
 const newsRoutes = require('./routes/news');
+const brandsRoutes = require('./routes/brands');
 
 // const testRoutes = require('./src/routes');
 // const userRoutes = require('./src/routes/user');
@@ -26,6 +27,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // All routes
 userRoutes(app);
 newsRoutes(app);
+brandsRoutes(app);
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
