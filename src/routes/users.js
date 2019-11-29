@@ -1,8 +1,13 @@
 const user = require('../controllers/users');
+// const images = require('../controllers/images');
+const upload = require('../middleware/upload');
 
 module.exports = (app) => {
+  // app.route('/upload')
+  //   .post(upload.save, user.upload);
+
   app.route('/register')
-    .post(user.register);
+    .post(upload.save, user.register);
 
   app.route('/login')
     .post(user.login);

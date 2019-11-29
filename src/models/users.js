@@ -18,10 +18,9 @@ const users = mongoose.Schema({
     type: String,
     required: true,
   },
-  date: {
-    type: Date,
-    default: Date.now, // get time
+  image: {
+    type: String,
   },
-});
+}, { timestamps: true });
 
 module.exports = mongoose.model('users', users);

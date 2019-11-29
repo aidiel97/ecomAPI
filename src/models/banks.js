@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
-const brands = mongoose.Schema({
-  code: {
+const banks = mongoose.Schema({
+  noAcc: {
     type: String,
     required: true,
     unique: true,
@@ -10,6 +10,10 @@ const brands = mongoose.Schema({
     type: String,
     required: true,
   },
+  bank: {
+    type: String,
+    required: true,
+  },
 }, { timestamp: true });
 
-module.exports = mongoose.model('brands', brands);
+module.exports = mongoose.model('banks', banks);

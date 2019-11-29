@@ -1,12 +1,36 @@
 const bcrypt = require('bcrypt');
+
 const responses = require('../responses');
 const User = require('../models/users');
+// const Images = require('../models/images');
 const jwt = require('../utils');
 
 module.exports = {
+  // upload: async (req, res) => {
+  //   const img = fs.readFileSync(req.file.path);
+  //   const encodeImage = img.toString('base64');
+  //   const buffImg = Buffer.from(encodeImage, 'base64');
+  //   const dbImg = {
+  //     contentType: req.file.mimetype,
+  //     compImg: buffImg,
+  //   };
+
+  //   // const thingSchema = mongoose.Schema({}, { strict: false });
+  //   // const Thing = mongoose.model('Thing', thingSchema);
+
+  //   // const images = new Thing(dbImg);
+  //   // const insert = await images.save();
+  //   // try {
+  //   //   const insert = await images.save();
+  //   //   responses.success(insert, res);
+  //   // } catch (err) {
+  //   //   res.status(401).json({ error: err });
+  //   // }
+  // },
   register: async (req, res) => {
     const data = req.body;
     data.password = bcrypt.hashSync(data.password, 10);
+    data.image = req.file.path;
     const user = new User(data);
 
     try {

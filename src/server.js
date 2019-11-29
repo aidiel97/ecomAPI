@@ -8,9 +8,16 @@ const port = process.env.PORT || 5000;
 const userRoutes = require('./routes/users');
 const newsRoutes = require('./routes/news');
 const brandsRoutes = require('./routes/brands');
-
-// const testRoutes = require('./src/routes');
-// const userRoutes = require('./src/routes/user');
+const subCategoryRoutes = require('./routes/subCategory');
+const categoryRoutes = require('./routes/categories');
+const flashRoutes = require('./routes/flash');
+const promosRoutes = require('./routes/promos');
+const transactionsRoutes = require('./routes/transactions');
+const banksRoutes = require('./routes/banks');
+const companyProfilesRoutes = require('./routes/companyProfiles');
+const contactUsRoutes = require('./routes/contactUs');
+const chatsRoutes = require('./routes/chats');
+const chatsDetailsRoutes = require('./routes/chatDetails');
 
 // CORS
 app.use((req, res, next) => {
@@ -28,6 +35,16 @@ app.use(bodyParser.urlencoded({ extended: true }));
 userRoutes(app);
 newsRoutes(app);
 brandsRoutes(app);
+subCategoryRoutes(app);
+categoryRoutes(app);
+flashRoutes(app);
+promosRoutes(app);
+transactionsRoutes(app);
+banksRoutes(app);
+companyProfilesRoutes(app);
+contactUsRoutes(app);
+chatsRoutes(app);
+chatsDetailsRoutes(app);
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);

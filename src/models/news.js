@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const news = mongoose.Schema({
-  news_code: {
+  newsCode: {
     type: String,
     required: true,
     unique: true,
@@ -14,7 +14,7 @@ const news = mongoose.Schema({
     type: String,
     required: true,
   },
-  category: {
+  newsCategory: {
     type: String,
     required: true,
   },
@@ -26,10 +26,6 @@ const news = mongoose.Schema({
     type: String,
     required: true,
   },
-  date: {
-    type: Date,
-    default: Date.now, // get time
-  },
-});
+}, { timestamp: true });
 
 module.exports = mongoose.model('news', news);

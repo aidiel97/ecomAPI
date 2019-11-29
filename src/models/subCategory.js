@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const brands = mongoose.Schema({
+const subCategories = mongoose.Schema({
   code: {
     type: String,
     required: true,
@@ -10,6 +10,7 @@ const brands = mongoose.Schema({
     type: String,
     required: true,
   },
+  categoriesCode: String,
 }, { timestamp: true });
 
-module.exports = mongoose.model('brands', brands);
+module.exports = mongoose.model('subCategories', subCategories);
