@@ -5,7 +5,8 @@ const storage = multer.diskStorage({
     cb(null, 'public/images/');
   },
   filename: (req, file, cb) => {
-    cb(null, `${Date.now()}-${file.originalname}`);
+    const cleanName = file.originalname.replace(/\s+/g, ''); // remove space
+    cb(null, `${Date.now()}-${cleanName}`);
   },
 });
 

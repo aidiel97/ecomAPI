@@ -1,5 +1,4 @@
 const bcrypt = require('bcrypt');
-const fs = require('fs');
 
 const responses = require('../responses');
 const User = require('../models/users');
@@ -30,7 +29,7 @@ module.exports = {
   register: async (req, res) => {
     const data = req.body;
     data.password = bcrypt.hashSync(data.password, 10);
-    data.image = req.file.path;
+    data.imageUrl = `/images/${req.file.filename}`;
     const user = new User(data);
 
     try {
@@ -79,12 +78,7 @@ module.exports = {
   detail: async (req, res) => {
     try {
       const getDetailUser = await User.findById(req.params.id);
-      // responses.success(getDetailUser, res);
-      // responses.success(fs.readFileSync(getDetailUser.image).toString(), res);
-      fs.readFile(getDetailUser.image, (err, data) => {
-        res.writeHead(200, { 'Content-Type': 'image/png' });
-        res.end(data); // Send the file data to the browser.
-      });
+      responses.success(getDetailUser, res);
     } catch (err) {
       responses.error(String(err), res);
     }
