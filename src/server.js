@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 
 const app = express();
 const port = process.env.PORT || 5000;
+const publicDir = require('path').join(__dirname, '../public');
 
 const userRoutes = require('./routes/users');
 const newsRoutes = require('./routes/news');
@@ -30,6 +31,11 @@ app.use((req, res, next) => {
 // Body Parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static(publicDir));
+
+// app.get('/',function(req,res){
+//   res.sendFile(__dirname + '/index.html');
+// });
 
 // All routes
 userRoutes(app);

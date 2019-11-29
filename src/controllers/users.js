@@ -1,8 +1,8 @@
 const bcrypt = require('bcrypt');
+const fs = require('fs');
 
 const responses = require('../responses');
 const User = require('../models/users');
-// const Images = require('../models/images');
 const jwt = require('../utils');
 
 module.exports = {
@@ -79,7 +79,12 @@ module.exports = {
   detail: async (req, res) => {
     try {
       const getDetailUser = await User.findById(req.params.id);
-      responses.success(getDetailUser, res);
+      // responses.success(getDetailUser, res);
+      // responses.success(fs.readFileSync(getDetailUser.image).toString(), res);
+      fs.readFile(getDetailUser.image, (err, data) => {
+        res.writeHead(200, { 'Content-Type': 'image/png' });
+        res.end(data); // Send the file data to the browser.
+      });
     } catch (err) {
       responses.error(String(err), res);
     }
