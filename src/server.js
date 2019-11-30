@@ -33,8 +33,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(publicDir));
 
-// app.get('/',function(req,res){
-//   res.sendFile(__dirname + '/index.html');
+// index sample
+// app.get('/', (req, res) => {
+//   res.sendFile(`${__dirname}/index.html`);
 // });
 
 // All routes

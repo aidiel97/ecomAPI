@@ -3,35 +3,17 @@ const bcrypt = require('bcrypt');
 const responses = require('../responses');
 const User = require('../models/users');
 const jwt = require('../utils');
+const Upload = require('../middleware/upload');
+const Delete = require('../middleware/delete');
 
 module.exports = {
-  // upload: async (req, res) => {
-  //   const img = fs.readFileSync(req.file.path);
-  //   const encodeImage = img.toString('base64');
-  //   const buffImg = Buffer.from(encodeImage, 'base64');
-  //   const dbImg = {
-  //     contentType: req.file.mimetype,
-  //     compImg: buffImg,
-  //   };
-
-  //   // const thingSchema = mongoose.Schema({}, { strict: false });
-  //   // const Thing = mongoose.model('Thing', thingSchema);
-
-  //   // const images = new Thing(dbImg);
-  //   // const insert = await images.save();
-  //   // try {
-  //   //   const insert = await images.save();
-  //   //   responses.success(insert, res);
-  //   // } catch (err) {
-  //   //   res.status(401).json({ error: err });
-  //   // }
-  // },
   register: async (req, res) => {
     const data = req.body;
     data.password = bcrypt.hashSync(data.password, 10);
     data.imageUrl = `/images/${req.file.filename}`;
     const user = new User(data);
 
+    // res.send(data)
     try {
       const insert = await user.save();
       responses.success(insert, res);
@@ -102,17 +84,47 @@ module.exports = {
   },
   update: async (req, res) => {
     try {
-      const update = await User.updateOne(
-        { _id: req.params.id },
-        { $set: req.body },
-      );
-      responses.success(update, res);
+      const uploadProcess = Upload.save;
+
+      uploadProcess(req, res, async (err) => {
+        if (req.body.password) req.body.password = bcrypt.hashSync(req.body.password, 10);
+
+        if (err) {
+          responses.status(500).json({ status: 'error', message: String(err) });
+        } else if (req.file) {
+          // delete oldImg
+          const oldDoc = await User.findById(req.params.id);
+          Delete.deleteFile(`public${oldDoc.imageUrl}`);
+
+          // update new data
+          const update = await User.updateOne(
+            { _id: req.params.id },
+            { $set: { imageUrl: `/images/${req.file.filename}`, ...req.body } },
+          );
+
+          const get = await User.findById(req.params.id);
+          responses.success({ updated: update, detail: get }, res);
+        } else {
+          const update = await User.updateOne(
+            { _id: req.params.id },
+            { $set: req.body },
+          );
+
+          const get = await User.findById(req.params.id);
+          responses.success({ file: 'NO UPLOADED FILE', updated: update, detail: get }, res);
+        }
+      });
     } catch (err) {
       responses.error(String(err), res);
     }
   },
   delete: async (req, res) => {
     try {
+      // delete oldImg
+      const oldDoc = await User.findById(req.params.id);
+      Delete.deleteFile(`public${oldDoc.imageUrl}`);
+
+      // remove data
       const remove = await User.findByIdAndDelete({ _id: req.params.id });
       responses.success(remove, res);
     } catch (err) {
