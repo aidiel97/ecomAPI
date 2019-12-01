@@ -8,17 +8,28 @@ const Delete = require('../middleware/delete');
 
 module.exports = {
   register: async (req, res) => {
-    const data = req.body;
-    data.password = bcrypt.hashSync(data.password, 10);
-    data.imageUrl = `/images/${req.file.filename}`;
-    const user = new User(data);
-
-    // res.send(data)
     try {
-      const insert = await user.save();
-      responses.success(insert, res);
+      const uploadProcess = Upload.save;
+
+      uploadProcess(req, res, async (err) => {
+        const data = req.body;
+        data.password = bcrypt.hashSync(data.password, 10);
+
+        if (err) {
+          res.status(500).json({ status: 'error', message: String(err) });
+        } else if (req.file) {
+          data.imageUrl = `/images/${req.file.filename}`;
+          const user = new User(data);
+          const insert = await user.save();
+          responses.success(insert, res);
+        } else {
+          const user = new User(data);
+          const insert = await user.save();
+          responses.success({ file: 'NO UPLOADED FILE', succeess: insert }, res);
+        }
+      });
     } catch (err) {
-      res.status(401).json({ error: err });
+      responses.error(String(err), res);
     }
   },
   login: async (req, res) => {
@@ -93,8 +104,8 @@ module.exports = {
           responses.status(500).json({ status: 'error', message: String(err) });
         } else if (req.file) {
           // delete oldImg
-          const oldDoc = await User.findById(req.params.id);
-          Delete.deleteFile(`public${oldDoc.imageUrl}`);
+          const oldDoc = await User.findById(req.params.id).select({ imageUrl: 1 });
+          Delete.deleteFile(`public${oldDoc}`);
 
           // update new data
           const update = await User.updateOne(
@@ -121,8 +132,8 @@ module.exports = {
   delete: async (req, res) => {
     try {
       // delete oldImg
-      const oldDoc = await User.findById(req.params.id);
-      Delete.deleteFile(`public${oldDoc.imageUrl}`);
+      const oldDoc = await User.findById(req.params.id).select({ imageUrl: 1 });
+      Delete.deleteFile(`public${oldDoc}`);
 
       // remove data
       const remove = await User.findByIdAndDelete({ _id: req.params.id });

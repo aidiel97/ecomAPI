@@ -1,6 +1,4 @@
 const user = require('../controllers/users');
-// const images = require('../controllers/images');
-// const upload = require('../middleware/upload');
 
 module.exports = (app) => {
   app.route('/register')

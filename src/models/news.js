@@ -1,14 +1,10 @@
 const mongoose = require('mongoose');
 
 const news = mongoose.Schema({
-  newsCode: {
-    type: String,
-    required: true,
-    unique: true,
-  },
   title: {
     type: String,
     required: true,
+    sparse: true,
   },
   body: {
     type: String,
@@ -22,9 +18,8 @@ const news = mongoose.Schema({
     type: String,
     required: true,
   },
-  image: {
+  imageUrl: {
     type: String,
-    required: true,
   },
 }, { timestamp: true });
 
