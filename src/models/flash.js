@@ -21,7 +21,7 @@ const flash = mongoose.Schema({
     type: Number,
     required: true,
   },
-  image: {
+  imageUrl: {
     type: String,
   },
   link: {

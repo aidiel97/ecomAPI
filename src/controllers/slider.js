@@ -38,7 +38,7 @@ module.exports = {
   },
   detailByCode: async (req, res) => {
     try {
-      const getDetail = await Slider.findOne({ code: req.params.code });
+      const getDetail = await Slider.findOne({ code: req.params.code }).select({ imageUrl: 1 });
       responses.success(getDetail, res);
     } catch (err) {
       responses.error(String(err), res);

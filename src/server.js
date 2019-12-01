@@ -20,6 +20,7 @@ const contactUsRoutes = require('./routes/contactUs');
 const chatsRoutes = require('./routes/chats');
 const chatsDetailsRoutes = require('./routes/chatDetails');
 const sliderRoutes = require('./routes/slider');
+const faqRoutes = require('./routes/faqs');
 
 // CORS
 app.use((req, res, next) => {
@@ -54,6 +55,7 @@ contactUsRoutes(app);
 chatsRoutes(app);
 chatsDetailsRoutes(app);
 sliderRoutes(app);
+faqRoutes(app);
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
