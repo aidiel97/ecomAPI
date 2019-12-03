@@ -1,4 +1,4 @@
-const controllers = require('../controllers/brands');
+const controllers = require('../controllers/banks');
 
 module.exports = (app) => {
   app.route('/banks')
@@ -6,6 +6,9 @@ module.exports = (app) => {
 
   app.route('/banks/:id')
     .get(controllers.detail);
+
+  app.route('/banks-find/:bank')
+    .get(controllers.spesific);
 
   app.route('/all-banks')
     .get(controllers.all);

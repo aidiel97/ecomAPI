@@ -9,6 +9,6 @@ const images = mongoose.Schema({
     type: Buffer,
     required: true,
   },
-}, { timestamp: true });
+}, { timestamps: true });
 
 module.exports = mongoose.model('images', images);

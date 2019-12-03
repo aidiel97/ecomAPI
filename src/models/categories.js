@@ -1,19 +1,19 @@
 const mongoose = require('mongoose');
 
-const categories = mongoose.Schema({
-  code: {
-    type: String,
-    required: true,
-    unique: true,
-  },
+const Categories = mongoose.Schema({
   name: {
     type: String,
-    required: true,
+    required: [true, 'please insert a name'],
+  },
+  parentId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'categories',
+    default: null,
   },
   subCategories: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'subCategories',
+    ref: 'categories',
   }],
-}, { timestamp: true });
+}, { timestamps: true });
 
-module.exports = mongoose.model('categories', categories);
+module.exports = mongoose.model('categories', Categories);

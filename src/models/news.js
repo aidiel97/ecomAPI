@@ -21,6 +21,6 @@ const news = mongoose.Schema({
   imageUrl: {
     type: String,
   },
-}, { timestamp: true });
+}, { timestamps: true });
 
 module.exports = mongoose.model('news', news);

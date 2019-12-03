@@ -4,7 +4,6 @@ const banks = mongoose.Schema({
   noAcc: {
     type: String,
     required: true,
-    unique: true,
   },
   name: {
     type: String,
@@ -14,6 +13,6 @@ const banks = mongoose.Schema({
     type: String,
     required: true,
   },
-}, { timestamp: true });
+}, { timestamps: true });
 
 module.exports = mongoose.model('banks', banks);

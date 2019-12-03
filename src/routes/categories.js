@@ -4,6 +4,9 @@ module.exports = (app) => {
   app.route('/categories')
     .post(controllers.create);
 
+  app.route('/subcategories/:id')
+    .post(controllers.createSub);
+
   app.route('/categories/:id')
     .get(controllers.detail);
 

@@ -6,6 +6,6 @@ const companyProfiles = mongoose.Schema({
   fax: String,
   email: String,
   website: String,
-}, { timestamp: true });
+}, { timestamps: true });
 
 module.exports = mongoose.model('companyProfiles', companyProfiles);

@@ -9,7 +9,6 @@ const publicDir = require('path').join(__dirname, '../public');
 const userRoutes = require('./routes/users');
 const newsRoutes = require('./routes/news');
 const brandsRoutes = require('./routes/brands');
-const subCategoryRoutes = require('./routes/subCategory');
 const categoryRoutes = require('./routes/categories');
 const flashRoutes = require('./routes/flash');
 const promosRoutes = require('./routes/promos');
@@ -21,6 +20,7 @@ const chatsRoutes = require('./routes/chats');
 const chatsDetailsRoutes = require('./routes/chatDetails');
 const sliderRoutes = require('./routes/slider');
 const faqRoutes = require('./routes/faqs');
+const productRoutes = require('./routes/products');
 
 // CORS
 app.use((req, res, next) => {
@@ -44,7 +44,6 @@ app.use(express.static(publicDir));
 userRoutes(app);
 newsRoutes(app);
 brandsRoutes(app);
-subCategoryRoutes(app);
 categoryRoutes(app);
 flashRoutes(app);
 promosRoutes(app);
@@ -56,6 +55,7 @@ chatsRoutes(app);
 chatsDetailsRoutes(app);
 sliderRoutes(app);
 faqRoutes(app);
+productRoutes(app);
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);

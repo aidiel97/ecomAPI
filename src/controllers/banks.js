@@ -20,6 +20,14 @@ module.exports = {
       responses.error(String(err), res);
     }
   },
+  spesific: async (req, res) => {
+    try {
+      const getDataDetail = await Models.find({ bank: req.params.bank });
+      responses.success(getDataDetail, res);
+    } catch (err) {
+      responses.error(String(err), res);
+    }
+  },
   all: async (req, res) => {
     try {
       const allModels = await Models.find();
