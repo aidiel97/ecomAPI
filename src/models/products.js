@@ -47,6 +47,15 @@ const products = mongoose.Schema({
     type: Number,
     required: true,
   },
+  flash: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'flashs',
+    default: null,
+  },
+  promo: {
+    type: mongoose.Schema.Types.ObjectId,
+    default: null,
+  },
   imageUrl: {
     type: String,
     required: true,

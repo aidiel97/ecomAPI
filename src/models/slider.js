@@ -4,7 +4,6 @@ const sliders = mongoose.Schema({
   code: {
     type: Number,
     required: true,
-    unique: true,
   },
   title: {
     type: String,

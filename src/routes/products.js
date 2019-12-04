@@ -16,6 +16,15 @@ module.exports = (app) => {
   app.route('/catalogs/:count')
     .get(controllers.fewCatalogs);
 
+  app.route('/newest')
+    .get(controllers.newest);
+
+  app.route('/newest/:count')
+    .get(controllers.newestFew);
+
+  app.route('/products/find/:name')
+    .get(controllers.find);
+
   app.route('/all-products/:count')
     .get(controllers.few);
 

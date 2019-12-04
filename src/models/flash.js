@@ -5,10 +5,6 @@ const flash = mongoose.Schema({
     type: String,
     required: true,
   },
-  // id_product: {
-  //   type: String,
-  //   required: true,
-  // },
   launch: {
     type: Date,
     required: true,
@@ -26,6 +22,10 @@ const flash = mongoose.Schema({
   },
   link: {
     type: String,
+  },
+  active: {
+    type: Boolean,
+    default: true,
   },
 }, { timestamps: true });
 

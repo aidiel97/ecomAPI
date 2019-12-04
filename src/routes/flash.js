@@ -10,6 +10,9 @@ module.exports = (app) => {
   app.route('/all-flash')
     .get(controllers.all);
 
+  app.route('/product-flash')
+    .get(controllers.flashProduct);
+
   app.route('/all-brands/:count')
     .get(controllers.few);
 
