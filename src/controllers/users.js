@@ -36,7 +36,7 @@ module.exports = {
     const data = req.body;
 
     try {
-      const userLogin = await User.findOne({ email: 'aidiel@gmail.com' }).exec();
+      const userLogin = await User.findOne({ email: req.body.email }).exec();
       // membuat antisipasi jika user belum mendaftar (data ga ada)
       if (userLogin !== null) {
         const jwtData = {

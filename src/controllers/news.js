@@ -1,7 +1,9 @@
 const responses = require('../responses');
+const Images = require('../models/images');
 const News = require('../models/news');
 const Upload = require('../middleware/upload');
 const Delete = require('../middleware/delete');
+const Encode = require('../middleware/encode');
 
 module.exports = {
   create: async (req, res) => {
@@ -9,13 +11,22 @@ module.exports = {
       const uploadProcess = Upload.save;
 
       uploadProcess(req, res, async (err) => {
-        // const data = req.body;
         if (err) {
           res.status(500).json({ status: 'error', message: String(err) });
         } else if (req.file) {
-          req.body.imageUrl = `/images/${req.file.filename}`;
+          // encode image before save to database
+          const imageDetail = Encode.encode(req.file);
+          req.body.imageFile = imageDetail;
+
+          // save image to Collection images
+          const imageModels = new Images(req.body);
+          const saveImage = await imageModels.save();
+
+          // save news record
+          req.body.imageId = saveImage.id;
           const news = new News(req.body);
           const insert = await news.save();
+
           responses.success(insert, res);
         } else {
           const news = new News(req.body);
@@ -30,7 +41,9 @@ module.exports = {
   detail: async (req, res) => {
     try {
       const getDetailNews = await News.findById(req.params.id);
-      responses.success(getDetailNews, res);
+      // responses.success(getDetailNews, res);
+      res.contentType(getDetailNews.imageFile.contentType);
+      res.send(getDetailNews.imageFile.image);
     } catch (err) {
       responses.error(String(err), res);
     }
@@ -61,13 +74,21 @@ module.exports = {
           responses.status(500).json({ status: 'error', message: String(err) });
         } else if (req.file) {
           // delete oldImg
-          const oldDoc = await News.findById(req.params.id).select({ imageUrl: 1 });
-          Delete.deleteFile(`public${oldDoc}`);
+          const oldDoc = await News.findById(req.params.id);
+          if (oldDoc.imageId) await Images.findByIdAndDelete({ _id: oldDoc.imageId });
+
+          // encode image before save to database
+          const imageDetail = Encode.encode(req.file);
+          req.body.imageFile = imageDetail;
+
+          // save image to Collection images
+          const imageModels = new Images(req.body);
+          const saveImage = await imageModels.save();
 
           // update new data
           const update = await News.updateOne(
             { _id: req.params.id },
-            { $set: { imageUrl: `/images/${req.file.filename}`, ...req.body } },
+            { $set: { imageId: `${saveImage.id}`, ...req.body } },
           );
 
           const get = await News.findById(req.params.id);
