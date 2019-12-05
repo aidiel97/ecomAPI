@@ -14,12 +14,16 @@ const users = mongoose.Schema({
     type: String,
     required: true,
   },
+  address: {
+    type: String,
+    required: true,
+  },
   password: {
     type: String,
     required: true,
   },
-  imageUrl: {
-    type: String,
+  imageId: {
+    type: mongoose.Schema.Types.ObjectId,
   },
 }, { timestamps: true });
 

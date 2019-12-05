@@ -2,7 +2,6 @@ const responses = require('../responses');
 const Images = require('../models/images');
 const News = require('../models/news');
 const Upload = require('../middleware/upload');
-const Delete = require('../middleware/delete');
 const Encode = require('../middleware/encode');
 
 module.exports = {
@@ -21,9 +20,9 @@ module.exports = {
           // save image to Collection images
           const imageModels = new Images(req.body);
           const saveImage = await imageModels.save();
+          req.body.imageId = saveImage.id;
 
           // save news record
-          req.body.imageId = saveImage.id;
           const news = new News(req.body);
           const insert = await news.save();
 
@@ -110,8 +109,8 @@ module.exports = {
   delete: async (req, res) => {
     try {
       // delete oldImg
-      const oldDoc = await News.findById(req.params.id).select({ imageUrl: 1 });
-      Delete.deleteFile(`public${oldDoc}`);
+      const oldDoc = await News.findById(req.params.id);
+      if (oldDoc.imageId) await Images.findByIdAndDelete({ _id: oldDoc.imageId });
 
       // remove data
       const remove = await News.findByIdAndDelete({ _id: req.params.id });

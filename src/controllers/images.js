@@ -39,7 +39,7 @@ module.exports = {
   },
   all: async (req, res) => {
     try {
-      const all = await Models.find();
+      const all = await Models.find().select('_id');
       responses.success(all, res);
     } catch (err) {
       responses.error(String(err), res);

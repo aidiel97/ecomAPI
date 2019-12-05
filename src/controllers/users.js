@@ -1,10 +1,11 @@
 const bcrypt = require('bcrypt');
 
 const responses = require('../responses');
+const Images = require('../models/images');
 const User = require('../models/users');
 const jwt = require('../utils');
 const Upload = require('../middleware/upload');
-const Delete = require('../middleware/delete');
+const Encode = require('../middleware/encode');
 
 module.exports = {
   register: async (req, res) => {
@@ -18,7 +19,14 @@ module.exports = {
         if (err) {
           res.status(500).json({ status: 'error', message: String(err) });
         } else if (req.file) {
-          data.imageUrl = `/images/${req.file.filename}`;
+          const imageDetail = Encode.encode(req.file);
+          req.body.imageFile = imageDetail;
+
+          // save image to Collection images
+          const imageModels = new Images(req.body);
+          const saveImage = await imageModels.save();
+          data.imageId = saveImage.id;
+
           const user = new User(data);
           const insert = await user.save();
           responses.success(insert, res);
@@ -104,13 +112,21 @@ module.exports = {
           responses.status(500).json({ status: 'error', message: String(err) });
         } else if (req.file) {
           // delete oldImg
-          const oldDoc = await User.findById(req.params.id).select({ imageUrl: 1 });
-          Delete.deleteFile(`public${oldDoc}`);
+          const oldDoc = await User.findById(req.params.id);
+          if (oldDoc.imageId) await Images.findByIdAndDelete({ _id: oldDoc.imageId });
+
+          // encode image before save to database
+          const imageDetail = Encode.encode(req.file);
+          req.body.imageFile = imageDetail;
+
+          // save image to Collection images
+          const imageModels = new Images(req.body);
+          const saveImage = await imageModels.save();
 
           // update new data
           const update = await User.updateOne(
             { _id: req.params.id },
-            { $set: { imageUrl: `/images/${req.file.filename}`, ...req.body } },
+            { $set: { imageId: `${saveImage.id}`, ...req.body } },
           );
 
           const get = await User.findById(req.params.id);
@@ -132,8 +148,8 @@ module.exports = {
   delete: async (req, res) => {
     try {
       // delete oldImg
-      const oldDoc = await User.findById(req.params.id).select({ imageUrl: 1 });
-      Delete.deleteFile(`public${oldDoc}`);
+      const oldDoc = await User.findById(req.params.id);
+      if (oldDoc.imageId) await Images.findByIdAndDelete({ _id: oldDoc.imageId });
 
       // remove data
       const remove = await User.findByIdAndDelete({ _id: req.params.id });

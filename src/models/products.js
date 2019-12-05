@@ -56,9 +56,8 @@ const products = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     default: null,
   },
-  imageUrl: {
-    type: String,
-    required: true,
+  imageId: {
+    type: mongoose.Schema.Types.ObjectId,
   },
 }, { timestamps: true });
 

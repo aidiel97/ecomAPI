@@ -1,10 +1,10 @@
 const responses = require('../responses');
+const Images = require('../models/images');
 const Models = require('../models/products');
 const Brands = require('../models/brands');
-// const Flash = require('../models/flash');
-// const Promo = require('../models/promos');
+const Encode = require('../middleware/encode');
 const Upload = require('../middleware/upload');
-const Delete = require('../middleware/delete');
+// const Delete = require('../middleware/delete');
 
 module.exports = {
   create: async (req, res) => {
@@ -15,18 +15,17 @@ module.exports = {
         if (err) {
           res.status(500).json({ status: 'error', message: String(err) });
         } else if (req.file) {
-          // make sure flashsale is exist
-          // const flashId = await Flash.findById(req.body.flash).select({ id: 1, active: 1 });
-          // const promoId = await Promo.findById(req.body.promo).select({ id: 1, active: 1 });
+          // encode image before save to database
+          const imageDetail = Encode.encode(req.file);
+          req.body.imageFile = imageDetail;
 
-          req.body.imageUrl = `/images/${req.file.filename}`;
+          // save image to Collection images
+          const imageModels = new Images(req.body);
+          const saveImage = await imageModels.save();
+          req.body.imageId = saveImage.id;
+
           const models = new Models(req.body);
           const insert = await models.save();
-
-          // if (flashId && flashId.active == true) flashId.products.push({ _id: insert.id });
-          // push product to flashsale
-          // if (promoId && promoId.active == true) flashId.products.push({ _id: insert.id });
-          // push product to promo
 
           responses.success(insert, res);
         } else {
@@ -60,7 +59,7 @@ module.exports = {
     try {
       const all = await Models.find()
         .select({
-          name: 1, price: 1, stock: 1, imageUrl: 1,
+          name: 1, price: 1, stock: 1, imageUrl: 1, imageId: 1,
         });
 
       responses.success(all, res);
@@ -175,13 +174,21 @@ module.exports = {
           responses.status(500).json({ status: 'error', message: String(err) });
         } else if (req.file) {
           // delete oldImg
-          const oldDoc = await Models.findById(req.params.id).select({ imageUrl: 1 });
-          Delete.deleteFile(`public${oldDoc}`);
+          const oldDoc = await Models.findById(req.params.id);
+          if (oldDoc.imageId) await Images.findByIdAndDelete({ _id: oldDoc.imageId });
+
+          // encode image before save to database
+          const imageDetail = Encode.encode(req.file);
+          req.body.imageFile = imageDetail;
+
+          // save image to Collection images
+          const imageModels = new Images(req.body);
+          const saveImage = await imageModels.save();
 
           // update new data
           const update = await Models.updateOne(
             { _id: req.params.id },
-            { $set: { imageUrl: `/images/${req.file.filename}`, ...req.body } },
+            { $set: { imageId: `${saveImage.id}`, ...req.body } },
           );
 
           const get = await Models.findById(req.params.id);
@@ -203,10 +210,9 @@ module.exports = {
   delete: async (req, res) => {
     try {
       // delete oldImg
-      const oldDoc = await Models.findById(req.params.id).select({ imageUrl: 1 });
-      Delete.deleteFile(`public${oldDoc}`);
+      const oldDoc = await Models.findById(req.params.id);
+      if (oldDoc.imageId) await Images.findByIdAndDelete({ _id: oldDoc.imageId });
 
-      // remove data
       const remove = await Models.findByIdAndDelete({ _id: req.params.id });
       responses.success(remove, res);
     } catch (err) {

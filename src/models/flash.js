@@ -17,8 +17,8 @@ const flash = mongoose.Schema({
     type: Number,
     required: true,
   },
-  imageUrl: {
-    type: String,
+  imageId: {
+    type: mongoose.Schema.Types.ObjectId,
   },
   link: {
     type: String,
