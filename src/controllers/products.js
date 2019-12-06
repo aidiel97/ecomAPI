@@ -85,7 +85,7 @@ module.exports = {
     try {
       const all = await Models.find()
         .select({
-          name: 1, price: 1, stock: 1, imageUrl: 1, createdAt: 1,
+          name: 1, price: 1, stock: 1, imageUrl: 1, createdAt: 1, imageId: 1,
         })
         .sort({ createdAt: -1 }); // = 'descending'
 
@@ -99,7 +99,7 @@ module.exports = {
     try {
       const all = await Models.find()
         .select({
-          name: 1, price: 1, stock: 1, imageUrl: 1, createdAt: 1,
+          name: 1, price: 1, stock: 1, imageUrl: 1, createdAt: 1, imageId: 1,
         })
         .limit(count)
         .sort({ createdAt: -1 });// = 'descending'
@@ -122,7 +122,7 @@ module.exports = {
         ],
       })
         .select({
-          name: 1, price: 1, stock: 1, imageUrl: 1,
+          name: 1, price: 1, stock: 1, imageUrl: 1, imageId: 1,
         });
 
       responses.success(all, res);

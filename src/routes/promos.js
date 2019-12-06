@@ -10,7 +10,7 @@ module.exports = (app) => {
   app.route('/product-promo')
     .get(controllers.promoProduct);
 
-  app.route('/product-promo')
+  app.route('/product-promo/:count')
     .get(controllers.fewPromoProduct);
 
   app.route('/all-promos')
