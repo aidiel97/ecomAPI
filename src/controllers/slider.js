@@ -48,8 +48,15 @@ module.exports = {
   },
   detailByCode: async (req, res) => {
     try {
-      const getDetail = await Slider.find({ code: req.params.code }).select({ imageId: 1 });
-      responses.success(getDetail, res);
+      const getDetail = await Slider.findOne({ code: req.params.code })
+        .populate({
+          path: 'imageId',
+          select: 'imageFile images',
+        })
+        .select({ imageId: 1 });
+
+      res.contentType(getDetail.imageId.imageFile.contentType);
+      res.send(getDetail.imageId.imageFile.image);
     } catch (err) {
       responses.error(String(err), res);
     }

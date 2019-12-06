@@ -15,6 +15,7 @@ const sliders = mongoose.Schema({
   },
   imageId: {
     type: mongoose.Schema.Types.ObjectId,
+    ref: 'images',
   },
 }, { timestamps: true });
 
