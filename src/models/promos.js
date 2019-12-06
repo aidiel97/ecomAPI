@@ -5,19 +5,19 @@ const promos = mongoose.Schema({
     type: String,
     required: true,
   },
-  // id_product: {
-  //   type: String,
-  //   required: true,
-  // },
   discount: {
     type: Number,
     required: true,
   },
-  image: {
-    type: String,
+  imageId: {
+    type: mongoose.Schema.Types.ObjectId,
   },
   link: {
     type: String,
+  },
+  active: {
+    type: Boolean,
+    default: true,
   },
 }, { timestamps: true });
 

@@ -7,6 +7,12 @@ module.exports = (app) => {
   app.route('/promos/:id')
     .get(controllers.detail);
 
+  app.route('/product-promo')
+    .get(controllers.promoProduct);
+
+  app.route('/product-promo')
+    .get(controllers.fewPromoProduct);
+
   app.route('/all-promos')
     .get(controllers.all);
 

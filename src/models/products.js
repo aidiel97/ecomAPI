@@ -54,6 +54,7 @@ const products = mongoose.Schema({
   },
   promo: {
     type: mongoose.Schema.Types.ObjectId,
+    ref: 'promos',
     default: null,
   },
   imageId: {

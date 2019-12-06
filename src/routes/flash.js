@@ -13,6 +13,9 @@ module.exports = (app) => {
   app.route('/product-flash')
     .get(controllers.flashProduct);
 
+  app.route('/product-flash/:count')
+    .get(controllers.fewFlashProduct);
+
   app.route('/all-brands/:count')
     .get(controllers.few);
 

@@ -1,7 +1,9 @@
+const Images = require('../models/images');
 const responses = require('../responses');
 const Slider = require('../models/slider');
+const Encode = require('../middleware/encode');
 const Upload = require('../middleware/upload');
-const Delete = require('../middleware/delete');
+// const Delete = require('../middleware/delete');
 
 module.exports = {
   create: async (req, res) => {
@@ -14,7 +16,15 @@ module.exports = {
         if (err) {
           res.status(500).json({ status: 'error', message: String(err) });
         } else if (req.file) {
-          data.imageUrl = `/images/${req.file.filename}`;
+          // encode image before save to database
+          const imageDetail = Encode.encode(req.file);
+          req.body.imageFile = imageDetail;
+
+          // save image to Collection images
+          const imageModels = new Images(req.body);
+          const saveImage = await imageModels.save();
+          data.imageId = saveImage.id;
+
           const slider = new Slider(data);
           const insert = await slider.save();
           responses.success(insert, res);
@@ -38,7 +48,7 @@ module.exports = {
   },
   detailByCode: async (req, res) => {
     try {
-      const getDetail = await Slider.find({ code: req.params.code }).select({ imageUrl: 1 });
+      const getDetail = await Slider.find({ code: req.params.code }).select({ imageId: 1 });
       responses.success(getDetail, res);
     } catch (err) {
       responses.error(String(err), res);
@@ -70,13 +80,21 @@ module.exports = {
           responses.status(500).json({ status: 'error', message: String(err) });
         } else if (req.file) {
           // delete oldImg
-          const oldDoc = await Slider.findById(req.params.id).select({ imageUrl: 1 });
-          Delete.deleteFile(`public${oldDoc}`);
+          const oldDoc = await Slider.findById(req.params.id);
+          if (oldDoc.imageId) await Images.findByIdAndDelete({ _id: oldDoc.imageId });
+
+          // encode image before save to database
+          const imageDetail = Encode.encode(req.file);
+          req.body.imageFile = imageDetail;
+
+          // save image to Collection images
+          const imageModels = new Images(req.body);
+          const saveImage = await imageModels.save();
 
           // update new data
           const update = await Slider.updateOne(
             { _id: req.params.id },
-            { $set: { imageUrl: `/images/${req.file.filename}`, ...req.body } },
+            { $set: { imageId: `${saveImage.id}`, ...req.body } },
           );
 
           const get = await Slider.findById(req.params.id);
@@ -98,8 +116,8 @@ module.exports = {
   delete: async (req, res) => {
     try {
       // delete oldImg
-      const oldDoc = await Slider.findById(req.params.id).select({ imageUrl: 1 });
-      Delete.deleteFile(`public${oldDoc}`);
+      const oldDoc = await Slider.findById(req.params.id);
+      if (oldDoc.imageId) await Images.findByIdAndDelete({ _id: oldDoc.imageId });
 
       // remove data
       const remove = await Slider.findByIdAndDelete({ _id: req.params.id });

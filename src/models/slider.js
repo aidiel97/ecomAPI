@@ -13,8 +13,8 @@ const sliders = mongoose.Schema({
     type: String,
     required: true,
   },
-  imageUrl: {
-    type: String,
+  imageId: {
+    type: mongoose.Schema.Types.ObjectId,
   },
 }, { timestamps: true });
 
