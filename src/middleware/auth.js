@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const secretKey = process.env.SECRET_KEY;
 
 const index = (req, res, next) => {
-  if (!req.headers.authorization) return res.status(403).send({ status: 'error', auth: false, message: 'No token provided.' });
+  if (!req.headers.authorization) res.status(403).send({ status: 'error', auth: false, message: 'No token provided.' });
 
   const token = req.headers.authorization;
 

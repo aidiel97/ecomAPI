@@ -1,8 +1,9 @@
+const Upload = require('../middleware/upload');
 const controllers = require('../controllers/flash');
 
 module.exports = (app) => {
   app.route('/flash')
-    .post(controllers.create);
+    .post(Upload, controllers.create);
 
   app.route('/flash/:id')
     .get(controllers.detail);
@@ -20,7 +21,7 @@ module.exports = (app) => {
     .get(controllers.few);
 
   app.route('/flash/:id')
-    .put(controllers.update);
+    .put(Upload, controllers.update);
 
   app.route('/flash/:id')
     .delete(controllers.delete);

@@ -1,41 +1,20 @@
 const bcrypt = require('bcrypt');
 
 const responses = require('../responses');
-const Images = require('../models/images');
-const User = require('../models/users');
+const Images = require('../controllers/images');
+const Models = require('../models/users');
 const jwt = require('../utils');
-const Upload = require('../middleware/upload');
-const Encode = require('../middleware/encode');
 
 module.exports = {
   register: async (req, res) => {
     try {
-      const uploadProcess = Upload.save;
+      req.body.password = bcrypt.hashSync(req.body.password, 10);
+      req.body.imageId = await Images.up(req); // call 'up' Function from images
 
-      uploadProcess(req, res, async (err) => {
-        const data = req.body;
-        data.password = bcrypt.hashSync(data.password, 10);
+      const models = new Models(req.body);
+      const insert = await models.save();
 
-        if (err) {
-          res.status(500).json({ status: 'error', message: String(err) });
-        } else if (req.file) {
-          const imageDetail = Encode.encode(req.file);
-          req.body.imageFile = imageDetail;
-
-          // save image to Collection images
-          const imageModels = new Images(req.body);
-          const saveImage = await imageModels.save();
-          data.imageId = saveImage.id;
-
-          const user = new User(data);
-          const insert = await user.save();
-          responses.success(insert, res);
-        } else {
-          const user = new User(data);
-          const insert = await user.save();
-          responses.success({ file: 'NO UPLOADED FILE', succeess: insert }, res);
-        }
-      });
+      responses.success(insert, res);
     } catch (err) {
       responses.error(String(err), res);
     }
@@ -44,7 +23,7 @@ module.exports = {
     const data = req.body;
 
     try {
-      const userLogin = await User.findOne({ email: req.body.email }).exec();
+      const userLogin = await Models.findOne({ email: req.body.email }).exec();
       // membuat antisipasi jika user belum mendaftar (data ga ada)
       if (userLogin !== null) {
         const jwtData = {
@@ -78,7 +57,7 @@ module.exports = {
   },
   detail: async (req, res) => {
     try {
-      const getDetailUser = await User.findById(req.params.id);
+      const getDetailUser = await Models.findById(req.params.id);
       responses.success(getDetailUser, res);
     } catch (err) {
       responses.error(String(err), res);
@@ -86,7 +65,7 @@ module.exports = {
   },
   allUser: async (req, res) => {
     try {
-      const allUser = await User.find();
+      const allUser = await Models.find();
       responses.success(allUser, res);
     } catch (err) {
       responses.error(String(err), res);
@@ -95,7 +74,7 @@ module.exports = {
   fewUser: async (req, res) => {
     const count = parseInt(req.params.count, 10);
     try {
-      const allUser = await User.find().limit(count);
+      const allUser = await Models.find().limit(count);
       responses.success(allUser, res);
     } catch (err) {
       responses.error(String(err), res);
@@ -103,44 +82,21 @@ module.exports = {
   },
   update: async (req, res) => {
     try {
-      const uploadProcess = Upload.save;
+      // delete oldImg
+      const oldImg = await Models.findById(req.params.id).select('imageId');
+      if (oldImg.imageId) await Images.del(oldImg.imageId);
 
-      uploadProcess(req, res, async (err) => {
-        if (req.body.password) req.body.password = bcrypt.hashSync(req.body.password, 10);
+      if (req.file) req.body.imageId = await Images.up(req); // call 'up' Function from images
 
-        if (err) {
-          responses.status(500).json({ status: 'error', message: String(err) });
-        } else if (req.file) {
-          // delete oldImg
-          const oldDoc = await User.findById(req.params.id);
-          if (oldDoc.imageId) await Images.findByIdAndDelete({ _id: oldDoc.imageId });
+      if (req.body.password) req.body.password = bcrypt.hashSync(req.body.password, 10);
 
-          // encode image before save to database
-          const imageDetail = Encode.encode(req.file);
-          req.body.imageFile = imageDetail;
+      // update new data
+      const update = await Models.updateOne(
+        { _id: req.params.id },
+        { $set: req.body },
+      );
 
-          // save image to Collection images
-          const imageModels = new Images(req.body);
-          const saveImage = await imageModels.save();
-
-          // update new data
-          const update = await User.updateOne(
-            { _id: req.params.id },
-            { $set: { imageId: `${saveImage.id}`, ...req.body } },
-          );
-
-          const get = await User.findById(req.params.id);
-          responses.success({ updated: update, detail: get }, res);
-        } else {
-          const update = await User.updateOne(
-            { _id: req.params.id },
-            { $set: req.body },
-          );
-
-          const get = await User.findById(req.params.id);
-          responses.success({ file: 'NO UPLOADED FILE', updated: update, detail: get }, res);
-        }
-      });
+      responses.success({ updated: update, detail: req.body }, res);
     } catch (err) {
       responses.error(String(err), res);
     }
@@ -148,11 +104,11 @@ module.exports = {
   delete: async (req, res) => {
     try {
       // delete oldImg
-      const oldDoc = await User.findById(req.params.id);
-      if (oldDoc.imageId) await Images.findByIdAndDelete({ _id: oldDoc.imageId });
+      const oldImg = await Models.findById(req.params.id).select('imageId');
+      if (oldImg.imageId) await Images.del(oldImg.imageId);
 
       // remove data
-      const remove = await User.findByIdAndDelete({ _id: req.params.id });
+      const remove = await Models.findByIdAndDelete({ _id: req.params.id });
       responses.success(remove, res);
     } catch (err) {
       responses.error(String(err), res);

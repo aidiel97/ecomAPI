@@ -1,10 +1,22 @@
 const responses = require('../responses');
 const Models = require('../models/images');
 const Upload = require('../middleware/upload');
-// const Delete = require('../middleware/delete');
 const Encode = require('../middleware/encode');
 
 module.exports = {
+  up: async (req) => {
+    const imageDetail = Encode.encode(req.file);
+    req.body.imageFile = imageDetail;
+
+    // save image to Collection images
+    const models = new Models(req.body);
+    const saveImage = await models.save();
+
+    return saveImage.id;
+  },
+  del: async (imageId) => {
+    await Models.findByIdAndDelete({ _id: imageId });
+  },
   create: async (req, res) => {
     try {
       const uploadProcess = Upload.save;

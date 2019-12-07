@@ -1,8 +1,9 @@
 const controllers = require('../controllers/promos');
+const Upload = require('../middleware/upload');
 
 module.exports = (app) => {
   app.route('/promos')
-    .post(controllers.create);
+    .post(Upload, controllers.create);
 
   app.route('/promos/:id')
     .get(controllers.detail);
@@ -20,7 +21,7 @@ module.exports = (app) => {
     .get(controllers.few);
 
   app.route('/promos/:id')
-    .put(controllers.update);
+    .put(Upload, controllers.update);
 
   app.route('/promos/:id')
     .delete(controllers.delete);

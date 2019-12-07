@@ -1,8 +1,9 @@
+const Upload = require('../middleware/upload');
 const slider = require('../controllers/slider');
 
 module.exports = (app) => {
   app.route('/slider')
-    .post(slider.create);
+    .post(Upload, slider.create);
 
   app.route('/slider/:id')
     .get(slider.detail);
@@ -17,7 +18,7 @@ module.exports = (app) => {
     .get(slider.few);
 
   app.route('/slider/:id')
-    .put(slider.update);
+    .put(Upload, slider.update);
 
   app.route('/slider/:id')
     .delete(slider.delete);
