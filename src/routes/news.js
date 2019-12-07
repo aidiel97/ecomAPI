@@ -10,6 +10,12 @@ module.exports = (app) => {
   app.route('/all-news')
     .get(news.allNews);
 
+  app.route('/career')
+    .get(news.career);
+
+  app.route('/event')
+    .get(news.event);
+
   app.route('/all-news/:count')
     .get(news.fewNews);
 

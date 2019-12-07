@@ -64,6 +64,36 @@ module.exports = {
       responses.error(String(err), res);
     }
   },
+  career: async (req, res) => {
+    try {
+      const allNews = await News.find({ newsCategory: 'career' })
+        .select({
+          id: 1,
+          title: 1,
+          body: 1,
+          imageId: 1,
+        });
+
+      responses.success(allNews, res);
+    } catch (err) {
+      responses.error(String(err), res);
+    }
+  },
+  event: async (req, res) => {
+    try {
+      const allNews = await News.find({ newsCategory: 'event' })
+        .select({
+          id: 1,
+          title: 1,
+          body: 1,
+          imageId: 1,
+        });
+
+      responses.success(allNews, res);
+    } catch (err) {
+      responses.error(String(err), res);
+    }
+  },
   update: async (req, res) => {
     try {
       const uploadProcess = Upload.save;

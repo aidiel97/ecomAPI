@@ -1,4 +1,5 @@
 const user = require('../controllers/users');
+const tokenVerification = require('../middleware/auth');
 
 module.exports = (app) => {
   app.route('/register')
@@ -14,7 +15,7 @@ module.exports = (app) => {
     .get(user.fewUser);
 
   app.route('/user/detail/:id')
-    .get(user.detail);
+    .get(tokenVerification, user.detail);
 
   app.route('/user/update/:id')
     .put(user.update);

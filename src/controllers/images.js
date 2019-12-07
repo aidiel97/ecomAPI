@@ -30,7 +30,7 @@ module.exports = {
   sendImage: async (req, res) => {
     try {
       const getDetailNews = await Models.findById(req.params.id);
-      // responses.success(getDetailNews, res);
+
       res.contentType(getDetailNews.imageFile.contentType);
       res.send(getDetailNews.imageFile.image);
     } catch (err) {
