@@ -1,13 +1,23 @@
 const mongoose = require('mongoose');
 
 const chatDetails = mongoose.Schema({
-  id_admin: {
+  idChat: {
     type: mongoose.Schema.Types.ObjectId,
+    ref: 'chats',
     required: true,
   },
-  id_user: {
+  idSender: {
     type: mongoose.Schema.Types.ObjectId,
+    ref: 'chats',
     required: true,
+  },
+  message: {
+    type: String,
+    required: [ true, 'please make sure that message is exist'],
+  },
+  read: {
+    type: Boolean,
+    default: false,
   },
 }, { timestamps: true });
 

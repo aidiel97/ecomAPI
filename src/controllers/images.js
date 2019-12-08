@@ -1,12 +1,12 @@
 const responses = require('../responses');
 const Models = require('../models/images');
-const Upload = require('../middleware/upload');
 const Encode = require('../middleware/encode');
 
 module.exports = {
   up: async (req) => {
     const imageDetail = Encode.encode(req.file);
     req.body.imageFile = imageDetail;
+    req.body.name = req.file.originalname;
 
     // save image to Collection images
     const models = new Models(req.body);
@@ -19,22 +19,13 @@ module.exports = {
   },
   create: async (req, res) => {
     try {
-      const uploadProcess = Upload.save;
+      const img = Encode.encode(req.file);
+      req.body.imageFile = img;
+      req.body.name = req.file.originalname;
+      const models = new Models(req.body);
+      const insert = await models.save();
 
-      uploadProcess(req, res, async (err) => {
-        if (err) {
-          res.status(500).json({ status: 'error', message: String(err) });
-        } else if (req.file) {
-          const img = Encode.encode(req.file);
-          req.body.imageFile = img;
-          const models = new Models(req.body);
-          const insert = await models.save();
-
-          responses.success(insert, res);
-        } else {
-          responses.error(String('NO FILE UPLOADED!'), res);
-        }
-      });
+      responses.success(insert, res);
     } catch (err) {
       responses.error(String(err), res);
     }
@@ -51,7 +42,7 @@ module.exports = {
   },
   all: async (req, res) => {
     try {
-      const all = await Models.find().select('_id');
+      const all = await Models.find().select({ _id: 1, name: 1 });
       responses.success(all, res);
     } catch (err) {
       responses.error(String(err), res);

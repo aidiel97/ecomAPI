@@ -12,7 +12,7 @@ const validator = async (req, res) => {
   try {
     await schema.validateAsync(req.body);
     // next();
-    responses.success(req.body, res);
+    responses.success('ayam', res);
   } catch (err) {
     responses.error(String(err), res);
   }

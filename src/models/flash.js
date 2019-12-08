@@ -3,11 +3,14 @@ const mongoose = require('mongoose');
 const flash = mongoose.Schema({
   name: {
     type: String,
-    required: true,
+    minlength: 3,
+    trim: true,
+    required: [true, 'User fullname required'],
   },
   launch: {
     type: Date,
     required: true,
+    default: Date.now,
   },
   expired: {
     type: Date,
@@ -15,7 +18,9 @@ const flash = mongoose.Schema({
   },
   discount: {
     type: Number,
-    required: true,
+    min: 0,
+    max: 1,
+    required: [true, 'Flash discount value required'],
   },
   imageId: {
     type: mongoose.Schema.Types.ObjectId,

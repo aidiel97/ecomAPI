@@ -1,22 +1,26 @@
 const mongoose = require('mongoose');
 
 const transactions = mongoose.Schema({
-  id_user: {
-    type: String,
-    required: true,
+  idUser: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: [true, 'User id required'],
   },
-  id_product: {
-    type: String,
-    required: true,
+  idProduct: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: [true, 'User id required'],
   },
   note: {
     type: String,
+    trim: true,
   },
   quantity: {
     type: Number,
+    min: 0,
+    required: [true, 'Quantity required'],
   },
-  total: {
+  totalPrice: {
     type: Number,
+    required: [true, 'totalPrice required'],
   },
   paidStatus: {
     type: Boolean,

@@ -3,11 +3,14 @@ const mongoose = require('mongoose');
 const promos = mongoose.Schema({
   name: {
     type: String,
-    required: true,
+    trim: true,
+    required: [true, 'Promos name required'],
   },
   discount: {
     type: Number,
-    required: true,
+    min: 0,
+    max: 1,
+    required: [true, 'Promos discount value required'],
   },
   imageId: {
     type: mongoose.Schema.Types.ObjectId,

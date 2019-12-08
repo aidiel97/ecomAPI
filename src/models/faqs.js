@@ -3,11 +3,14 @@ const mongoose = require('mongoose');
 const faqs = mongoose.Schema({
   pertanyaan: {
     type: String,
-    required: true,
+    minlength: 3,
+    trim: true,
+    required: [true, 'PERTANYAAN required'],
     unique: true,
   },
   body: {
     type: String,
+    trim: true,
     required: true,
   },
   categories: {

@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 const Categories = mongoose.Schema({
   name: {
     type: String,
+    minlength: 3,
+    trim: true,
     required: [true, 'please insert a name'],
   },
   parentId: {

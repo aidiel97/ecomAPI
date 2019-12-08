@@ -1,23 +1,29 @@
 const mongoose = require('mongoose');
+const moment = require('moment');
+
+const year = moment().year(); // get current year
 
 const products = mongoose.Schema({
   name: {
     type: String,
-    required: true,
+    minlength: 2,
+    trim: true,
+    required: [true, 'Product name required'],
   },
   price: {
     type: Number,
-    required: true,
+    min: 1,
+    required: [true, 'Price required'],
   },
   category: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'categories',
-    required: true,
+    required: [true, 'Category Id required'],
   },
   brand: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'brands',
-    required: true,
+    required: [true, 'Brand Id required'],
   },
   weight: {
     type: Number,
@@ -25,19 +31,22 @@ const products = mongoose.Schema({
   },
   dimention: {
     type: String,
+    trim: true,
     default: '-',
   },
   color: {
     type: String,
-    required: true,
+    trim: true,
+    required: [true, 'Product color required'],
   },
   description: {
     type: String,
-    required: true,
+    trim: true,
+    default: '-',
   },
   stock: {
     type: Number,
-    required: true,
+    required: [true, 'Stock required'],
   },
   status: {
     type: Boolean,
@@ -45,7 +54,9 @@ const products = mongoose.Schema({
   },
   productionYear: {
     type: Number,
-    required: true,
+    min: 1990,
+    max: year,
+    trim: true,
   },
   flash: {
     type: mongoose.Schema.Types.ObjectId,

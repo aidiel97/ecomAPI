@@ -3,14 +3,20 @@ const mongoose = require('mongoose');
 const banks = mongoose.Schema({
   noAcc: {
     type: String,
-    required: true,
+    minlengt: 8,
+    trim: true,
+    required: [true, 'account number required'],
   },
   name: {
     type: String,
+    trim: true,
+    minlengt: 3,
     required: true,
   },
   bank: {
     type: String,
+    trim: true,
+    minlengt: 3,
     required: true,
   },
 }, { timestamps: true });

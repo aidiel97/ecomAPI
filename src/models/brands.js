@@ -3,12 +3,13 @@ const mongoose = require('mongoose');
 const brands = mongoose.Schema({
   code: {
     type: String,
-    required: true,
+    required: [true, 'brands code required'],
     unique: true,
   },
   name: {
     type: String,
-    required: true,
+    trim: true,
+    required: [true, 'brand name required'],
   },
 }, { timestamps: true });
 

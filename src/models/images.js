@@ -1,6 +1,13 @@
 const mongoose = require('mongoose');
+const moment = require('moment');
+
+const now = moment();
 
 const images = mongoose.Schema({
+  name: {
+    type: String,
+    default: now.toString(),
+  },
   imageFile: {
     contentType: {
       type: String,

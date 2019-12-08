@@ -1,4 +1,5 @@
 const controllers = require('../controllers/images');
+const Upload = require('../middleware/upload');
 
 module.exports = (app) => {
   app.route('/image')
@@ -8,7 +9,7 @@ module.exports = (app) => {
     .get(controllers.sendImage);
 
   app.route('/image')
-    .post(controllers.create);
+    .post(Upload, controllers.create);
 
   app.route('/image/:id')
     .delete(controllers.delete);
