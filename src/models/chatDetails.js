@@ -1,19 +1,14 @@
 const mongoose = require('mongoose');
 
 const chatDetails = mongoose.Schema({
-  idChat: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'chats',
-    required: true,
-  },
-  idSender: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'chats',
+  sender: {
+    type: String,
+    enum: ['admin', 'user'],
     required: true,
   },
   message: {
     type: String,
-    required: [ true, 'please make sure that message is exist'],
+    required: [true, 'MESSAGE required'],
   },
   read: {
     type: Boolean,

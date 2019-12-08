@@ -1,11 +1,42 @@
 const responses = require('../responses');
 const Models = require('../models/transactions');
+const Product = require('../models/products');
 
 module.exports = {
   create: async (req, res) => {
-    const models = new Models(req.body);
+    const newStock = -req.body.quantity; // get&set quantity of product
+    await Product.updateOne(
+      { _id: req.body.idProduct },
+      { $inc: { stock: newStock } },
+    );
 
     try {
+      const productDetail = await Product.findById(req.body.idProduct)
+        .select({
+          name: 1, price: 1, stock: 1, flash: 1, promo: 1,
+        })
+        .populate({
+          path: 'flash',
+          select: 'discount flashs',
+        })
+        .populate({
+          path: 'promo',
+          select: 'discount promos',
+        })
+        .lean();
+
+      const lastPrice = req.body.quantity * productDetail.price;
+
+      // set price
+      if (productDetail.promo) {
+        req.body.totalPrice = lastPrice * productDetail.promo.discount;
+      } else if (productDetail.flash) {
+        req.body.totalPrice = lastPrice * productDetail.promo.discount;
+      } else {
+        req.body.totalPrice = lastPrice;
+      }
+
+      const models = new Models(req.body);
       const insert = await models.save();
       responses.success(insert, res);
     } catch (err) {
