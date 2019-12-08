@@ -63,7 +63,7 @@ module.exports = {
         data.push({
           _id: mongoose.Types.ObjectId(prod.id),
           name: prod.name,
-          flashSale: prod.price,
+          price1: prod.price,
           price: prod.price - prod.price * prod.flash.discount,
           imageUrl: prod.imageUrl,
         });
@@ -97,7 +97,7 @@ module.exports = {
         data.push({
           _id: mongoose.Types.ObjectId(prod.id),
           name: prod.name,
-          flashSale: prod.price,
+          price1: prod.price,
           price: prod.price - prod.price * prod.flash.discount,
           imageUrl: prod.imageUrl,
         });
