@@ -4,7 +4,9 @@ const chats = mongoose.Schema({
   idUser: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'users',
-    required: true,
+  },
+  name: {
+    type: String,
   },
   detail: [{
     type: mongoose.Schema.Types.ObjectId,

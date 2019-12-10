@@ -26,6 +26,12 @@ module.exports = (app) => {
   app.route('/products/find/:name')
     .get(controllers.find);
 
+  app.route('/p')
+    .get(controllers.byCategories);
+
+  app.route('/p/:categories/:sort/:count') // try to user '?' (req.query)
+    .get(controllers.fastByCategories);
+
   app.route('/all-products/:count')
     .get(controllers.few);
 

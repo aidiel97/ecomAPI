@@ -34,13 +34,13 @@ const users = mongoose.Schema({
     minlength: 6,
     required: [true, 'User password required'],
   },
-  role: {
-    type: String,
-    trim: true,
-    enum: ['admin', 'user', 'seller'],
-    default: 'user',
-    required: [true, 'User role required'],
-  },
+  // role: {
+  //   type: String,
+  //   trim: true,
+  //   enum: ['admin', 'user', 'seller'],
+  //   default: 'user',
+  //   required: [true, 'User role required'],
+  // },
   imageId: {
     type: mongoose.Schema.Types.ObjectId,
     default: '5dec7a211028220e840c3648', // default user image

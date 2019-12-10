@@ -1,4 +1,5 @@
 const responses = require('../responses');
+const Images = require('../controllers/images');
 const Models = require('../models/banks');
 
 module.exports = {
@@ -6,6 +7,8 @@ module.exports = {
     const models = new Models(req.body);
 
     try {
+      req.body.imageId = await Images.up(req); // call 'up' Function from images
+
       const insert = await models.save();
       responses.success(insert, res);
     } catch (err) {
@@ -47,6 +50,12 @@ module.exports = {
   },
   update: async (req, res) => {
     try {
+      // delete oldImg
+      const oldImg = await Models.findById(req.params.id).select('imageId');
+      if (oldImg.imageId) await Images.del(oldImg.imageId);
+
+      if (req.file) req.body.imageId = await Images.up(req); // call 'up' Function from images
+
       const update = await Models.updateOne(
         { _id: req.params.id },
         { $set: req.body },
@@ -58,6 +67,10 @@ module.exports = {
   },
   delete: async (req, res) => {
     try {
+      // delete oldImg
+      const oldImg = await Models.findById(req.params.id).select('imageId');
+      if (oldImg.imageId) await Images.del(oldImg.imageId);
+
       const remove = await Models.findByIdAndDelete({ _id: req.params.id });
       responses.success(remove, res);
     } catch (err) {

@@ -19,6 +19,9 @@ const banks = mongoose.Schema({
     minlengt: 3,
     required: true,
   },
+  imageId: {
+    type: mongoose.Schema.Types.ObjectId,
+  },
 }, { timestamps: true });
 
 module.exports = mongoose.model('banks', banks);

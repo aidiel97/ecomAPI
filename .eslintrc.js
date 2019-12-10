@@ -15,6 +15,7 @@ module.exports = {
   },
   "rules":
   {
+    "no-param-reassign": 0,
     "eol-last": 2,
     "eqeqeq": [
       2,

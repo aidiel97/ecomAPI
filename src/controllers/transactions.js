@@ -25,15 +25,18 @@ module.exports = {
         })
         .lean();
 
+      const shippingCost = (req.body.shipping) ? parseInt(req.body.shipping, 10) : 10000;
+      const insurance = productDetail.price * 0.1;
       const lastPrice = req.body.quantity * productDetail.price;
+      const shipping = shippingCost + insurance;
 
       // set price
       if (productDetail.promo) {
-        req.body.totalPrice = lastPrice * productDetail.promo.discount;
+        req.body.totalPrice = lastPrice * productDetail.promo.discount + shipping;
       } else if (productDetail.flash) {
-        req.body.totalPrice = lastPrice * productDetail.promo.discount;
+        req.body.totalPrice = lastPrice * productDetail.promo.discount + shipping;
       } else {
-        req.body.totalPrice = lastPrice;
+        req.body.totalPrice = lastPrice + shipping;
       }
 
       const models = new Models(req.body);

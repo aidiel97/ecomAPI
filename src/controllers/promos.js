@@ -1,5 +1,3 @@
-const mongoose = require('mongoose');
-
 const responses = require('../responses');
 const Products = require('../models/products');
 const Images = require('../controllers/images');
@@ -34,26 +32,17 @@ module.exports = {
           select: 'discount promos',
         })
         .select({
-          name: 1, price: 1, stock: 1, flash: 1, imageUrl: 1, imageId: 1,
+          name: 1, price: 1, promo: 1, imageUrl: 1, imageId: 1,
         })
         .where('promo')
         .ne(null)
         .lean();
 
-      const data = [];
-
-      products.forEach(async (prod) => {
-        data.push({
-          _id: mongoose.Types.ObjectId(prod.id),
-          name: prod.name,
-          price1: prod.price,
-          price: prod.price - prod.price * prod.promo.discount,
-          imageUrl: prod.imageUrl,
-        });
+      products.forEach((prod) => {
+        prod.price1 = prod.price - prod.price * prod.promo.discount;
       });
-      // const data = await Models.findById('5de73b0d6540f567b55b99ef');
 
-      responses.success(data, res);
+      responses.success(products, res);
     } catch (err) {
       responses.error(String(err), res);
     }
@@ -67,27 +56,18 @@ module.exports = {
           select: 'discount promos',
         })
         .select({
-          name: 1, price: 1, stock: 1, flash: 1, imageUrl: 1, imageId: 1,
+          name: 1, price: 1, promo: 1, imageUrl: 1, imageId: 1,
         })
         .where('promo')
         .ne(null)
         .limit(count)
         .lean();
 
-      const data = [];
-
-      products.forEach(async (prod) => {
-        data.push({
-          _id: mongoose.Types.ObjectId(prod.id),
-          name: prod.name,
-          price1: prod.price,
-          price: prod.price - prod.price * prod.promo.discount,
-          imageUrl: prod.imageUrl,
-        });
+      products.forEach((prod) => {
+        prod.price1 = prod.price - prod.price * prod.promo.discount;
       });
-      // const data = await Models.findById('5de73b0d6540f567b55b99ef');
 
-      responses.success(data, res);
+      responses.success(products, res);
     } catch (err) {
       responses.error(String(err), res);
     }
@@ -95,6 +75,19 @@ module.exports = {
   all: async (req, res) => {
     try {
       const allModels = await Models.find();
+      responses.success(allModels, res);
+    } catch (err) {
+      responses.error(String(err), res);
+    }
+  },
+  modals: async (req, res) => {
+    try {
+      const allModels = await Models.find()
+        .select({
+          name: 1, imageId: 1,
+        })
+        .limit(1)
+        .sort({ createdAt: -1 });
       responses.success(allModels, res);
     } catch (err) {
       responses.error(String(err), res);

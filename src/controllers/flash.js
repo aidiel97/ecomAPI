@@ -1,5 +1,3 @@
-const mongoose = require('mongoose');
-
 const responses = require('../responses');
 const Models = require('../models/flash');
 const Images = require('../controllers/images');
@@ -51,26 +49,17 @@ module.exports = {
           select: 'discount flashs',
         })
         .select({
-          name: 1, price: 1, stock: 1, flash: 1, imageUrl: 1, imageId: 1,
+          name: 1, price: 1, flash: 1, imageUrl: 1, imageId: 1,
         })
         .where('flash')
         .ne(null)
         .lean();
 
-      const data = [];
-
-      products.forEach(async (prod) => {
-        data.push({
-          _id: mongoose.Types.ObjectId(prod.id),
-          name: prod.name,
-          price1: prod.price,
-          price: prod.price - prod.price * prod.flash.discount,
-          imageUrl: prod.imageUrl,
-        });
+      products.forEach((prod) => {
+        prod.price1 = prod.price - prod.price * prod.flash.discount;
       });
-      // const data = await Models.findById('5de73b0d6540f567b55b99ef');
 
-      responses.success(data, res);
+      responses.success(products, res);
     } catch (err) {
       responses.error(String(err), res);
     }
@@ -84,27 +73,18 @@ module.exports = {
           select: 'discount flashs',
         })
         .select({
-          name: 1, price: 1, stock: 1, flash: 1, imageUrl: 1, imageId: 1,
+          name: 1, price: 1, flash: 1, imageUrl: 1, imageId: 1,
         })
         .where('flash')
         .ne(null)
         .limit(count)
         .lean();
 
-      const data = [];
-
-      products.forEach(async (prod) => {
-        data.push({
-          _id: mongoose.Types.ObjectId(prod.id),
-          name: prod.name,
-          price1: prod.price,
-          price: prod.price - prod.price * prod.flash.discount,
-          imageUrl: prod.imageUrl,
-        });
+      products.forEach((prod) => {
+        prod.price1 = prod.price - prod.price * prod.flash.discount;
       });
-      // const data = await Models.findById('5de73b0d6540f567b55b99ef');
 
-      responses.success(data, res);
+      responses.success(products, res);
     } catch (err) {
       responses.error(String(err), res);
     }

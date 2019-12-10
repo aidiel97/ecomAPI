@@ -4,6 +4,23 @@ const Models = require('../models/products');
 const Brands = require('../models/brands');
 // const Delete = require('../middleware/delete');
 
+const SortHandler = (params) => {
+  let value = {};
+  if (params === 'terbaru') {
+    value = { updatedAt: -1 };
+  } else if (params === 'terlama') {
+    value = { updatedAt: 1 };
+  } else if (params === 'termurah') {
+    value = { price: 1 };
+  } else if (params === 'termahal') {
+    value = { price: -1 };
+  } else {
+    value = {};
+  }
+
+  return value;
+};
+
 module.exports = {
   create: async (req, res) => {
     try {
@@ -103,6 +120,40 @@ module.exports = {
         .select({
           name: 1, price: 1, stock: 1, imageUrl: 1, imageId: 1,
         });
+
+      responses.success(all, res);
+    } catch (err) {
+      responses.error(String(err), res);
+    }
+  },
+  fastByCategories: async (req, res) => {
+    const catId = req.params.categories;
+    const count = parseInt(req.params.count, 10);
+    const sortby = SortHandler(req.params.sort);
+    try {
+      const all = await Models.find({ category: catId })
+        .select({
+          name: 1, price: 1, stock: 1, imageId: 1, updatedAt: 1,
+        })
+        .sort(sortby)
+        .limit(count);
+
+      responses.success(all, res);
+    } catch (err) {
+      responses.error(String(err), res);
+    }
+  },
+  byCategories: async (req, res) => {
+    const catId = req.query.categories;
+    const sortby = SortHandler(req.query.sort);
+    const count = parseInt(req.query.count, 10);
+    try {
+      const all = await Models.find({ category: catId })
+        .select({
+          name: 1, price: 1, stock: 1, imageId: 1, updatedAt: 1,
+        })
+        .sort(sortby)
+        .limit(count);
 
       responses.success(all, res);
     } catch (err) {

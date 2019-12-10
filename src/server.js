@@ -7,6 +7,7 @@ const port = process.env.PORT || 5000;
 const publicDir = require('path').join(__dirname, '../public');
 
 const userRoutes = require('./routes/users');
+const adminRoutes = require('./routes/admins');
 const newsRoutes = require('./routes/news');
 const brandsRoutes = require('./routes/brands');
 const categoryRoutes = require('./routes/categories');
@@ -42,6 +43,7 @@ app.use(express.static(publicDir));
 // });
 
 // All routes
+adminRoutes(app);
 userRoutes(app);
 newsRoutes(app);
 brandsRoutes(app);

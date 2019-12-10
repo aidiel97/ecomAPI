@@ -17,6 +17,9 @@ module.exports = (app) => {
   app.route('/all-promos')
     .get(controllers.all);
 
+  app.route('/modals')
+    .get(controllers.modals);
+
   app.route('/all-promos/:count')
     .get(controllers.few);
 

@@ -18,6 +18,10 @@ const transactions = mongoose.Schema({
     min: 0,
     required: [true, 'Quantity required'],
   },
+  shipping: {
+    type: Number,
+    default: 10000,
+  },
   totalPrice: {
     type: Number,
     required: [true, 'totalPrice required'],
