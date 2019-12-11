@@ -3,9 +3,8 @@ const Models = require('../models/brands');
 
 module.exports = {
   create: async (req, res) => {
-    const models = new Models(req.body);
-
     try {
+      const models = new Models(req.body);
       const insert = await models.save();
       responses.success(insert, res);
     } catch (err) {
