@@ -4,11 +4,10 @@ const Models = require('../models/banks');
 
 module.exports = {
   create: async (req, res) => {
-    const models = new Models(req.body);
-
     try {
       req.body.imageId = await Images.up(req); // call 'up' Function from images
 
+      const models = new Models(req.body);
       const insert = await models.save();
       responses.success(insert, res);
     } catch (err) {

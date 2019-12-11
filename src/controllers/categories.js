@@ -1,3 +1,7 @@
+const redis = require('redis');
+
+const client = redis.createClient();
+
 const responses = require('../responses');
 const Models = require('../models/categories');
 
@@ -83,6 +87,10 @@ module.exports = {
           select: 'name subCategories',
           populate: { path: 'subCategories', select: 'name subCategories' },
         });
+
+      // set cache data
+      // const data = await allModels.json();
+      client.set('category', 1800, JSON.stringify(allModels));
 
       responses.success(allModels, res);
     } catch (err) {
