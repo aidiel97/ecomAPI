@@ -90,7 +90,7 @@ module.exports = {
 
       // set cache data
       // const data = await allModels.json();
-      client.set('category', 1800, JSON.stringify(allModels));
+      // client.set('category', 1800, JSON.stringify(allModels));
 
       responses.success(allModels, res);
     } catch (err) {
