@@ -1,6 +1,6 @@
-const redis = require('redis');
+// const redis = require('redis');
 
-const client = redis.createClient();
+// const client = redis.createClient();
 
 const responses = require('../responses');
 const Models = require('../models/categories');
