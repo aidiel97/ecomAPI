@@ -7,9 +7,9 @@ module.exports = {
     try {
       req.body.imageId = await Images.up(req); // call 'up' Function from images
 
-      const models = new Models(req.body);
-      const insert = await models.save();
-      responses.success(insert, res);
+      // const models = new Models(req.body);
+      // const insert = await models.save();
+      responses.success(req.body.name, res);
     } catch (err) {
       res.status(401).json({ error: err });
     }

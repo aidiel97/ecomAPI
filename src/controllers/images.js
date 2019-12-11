@@ -6,7 +6,7 @@ module.exports = {
   up: async (req) => {
     const imageDetail = Encode.encode(req.file);
     req.body.imageFile = imageDetail;
-    req.body.name = req.file.originalname;
+    req.body.Iname = req.file.originalname;
 
     // save image to Collection images
     const models = new Models(req.body);
@@ -21,7 +21,7 @@ module.exports = {
     try {
       const img = Encode.encode(req.file);
       req.body.imageFile = img;
-      req.body.name = req.file.originalname;
+      req.body.Iname = req.file.originalname;
       const models = new Models(req.body);
       const insert = await models.save();
 
@@ -42,7 +42,7 @@ module.exports = {
   },
   all: async (req, res) => {
     try {
-      const all = await Models.find().select({ _id: 1, name: 1 });
+      const all = await Models.find().select({ _id: 1, Iname: 1 });
       responses.success(all, res);
     } catch (err) {
       responses.error(String(err), res);

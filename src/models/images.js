@@ -4,7 +4,7 @@ const moment = require('moment');
 const now = moment();
 
 const images = mongoose.Schema({
-  name: {
+  Iname: {
     type: String,
     default: now.toString(),
   },
