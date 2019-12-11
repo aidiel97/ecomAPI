@@ -1,5 +1,5 @@
 const controllers = require('../controllers/categories');
-const Cache = require('../middleware/cache');
+// const Cache = require('../middleware/cache');
 
 module.exports = (app) => {
   app.route('/categories')

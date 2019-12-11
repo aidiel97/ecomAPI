@@ -1,19 +1,19 @@
-const redis = require('redis');
+// const redis = require('redis');
 
-const client = redis.createClient();
+// const client = redis.createClient();
 
-const responses = require('../responses');
+// const responses = require('../responses');
 
-module.exports = {
-  cache: (req, res, next) => {
-    client.get('category', (err, data) => {
-      if (err) throw err;
+// module.exports = {
+//   cache: (req, res, next) => {
+//     client.get('category', (err, data) => {
+//       if (err) throw err;
 
-      if (data !== null) {
-        responses.success('cache', res);
-      } else {
-        next();
-      }
-    });
-  },
-};
+//       if (data !== null) {
+//         responses.success('cache', res);
+//       } else {
+//         next();
+//       }
+//     });
+//   },
+// };
