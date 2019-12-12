@@ -1,9 +1,10 @@
 const news = require('../controllers/news');
 const Upload = require('../middleware/upload');
+const Auth = require('../middleware/auth');
 
 module.exports = (app) => {
   app.route('/news')
-    .post(Upload, news.create);
+    .post(Auth, Upload, news.create);
 
   app.route('/news/:id')
     .get(news.detail);
@@ -21,8 +22,8 @@ module.exports = (app) => {
     .get(news.fewNews);
 
   app.route('/news/:id')
-    .put(Upload, news.update);
+    .put(Auth, Upload, news.update);
 
   app.route('/news/:id')
-    .delete(news.delete);
+    .delete(Auth, news.delete);
 };

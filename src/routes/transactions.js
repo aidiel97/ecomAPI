@@ -1,21 +1,28 @@
+const Auth = require('../middleware/auth');
 const controllers = require('../controllers/transactions');
 
 module.exports = (app) => {
   app.route('/transactions')
-    .post(controllers.create);
+    .post(Auth, controllers.create);
 
   app.route('/transactions/:id')
-    .get(controllers.detail);
+    .get(Auth, controllers.detail);
+
+  app.route('/user/transactions/:id')
+    .get(Auth, controllers.userTransactions);
+
+  app.route('/user/bills/:id')
+    .get(Auth, controllers.userBills);
 
   app.route('/all-transactions')
-    .get(controllers.all);
+    .get(Auth, controllers.all);
 
   app.route('/all-transactions/:count')
-    .get(controllers.few);
+    .get(Auth, controllers.few);
 
   app.route('/transactions/:id')
-    .put(controllers.update);
+    .put(Auth, controllers.update);
 
   app.route('/transactions/:id')
-    .delete(controllers.delete);
+    .delete(Auth, controllers.delete);
 };

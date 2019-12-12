@@ -1,5 +1,5 @@
 const user = require('../controllers/users');
-// const tokenVerification = require('../middleware/auth');
+const Auth = require('../middleware/auth');
 const Upload = require('../middleware/upload');
 
 module.exports = (app) => {
@@ -10,17 +10,17 @@ module.exports = (app) => {
     .post(user.login);
 
   app.route('/all-user')
-    .get(user.allUser);
+    .get(Auth, user.allUser);
 
   app.route('/all-user/:count')
-    .get(user.fewUser);
+    .get(Auth, user.fewUser);
 
   app.route('/user/detail/:id')
-    .get(user.detail);
+    .get(Auth, user.detail);
 
   app.route('/user/update/:id')
-    .put(Upload, user.update);
+    .put(Auth, Upload, user.update);
 
   app.route('/user/delete/:id')
-    .delete(user.delete);
+    .delete(Auth, user.delete);
 };

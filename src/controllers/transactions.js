@@ -26,10 +26,12 @@ module.exports = {
         .lean();
 
       const shippingCost = (req.body.shipping) ? parseInt(req.body.shipping, 10) : 10000;
-      const insurance = productDetail.price * 0.1;
+      const insurance = productDetail.price * 0.01;
       const lastPrice = req.body.quantity * productDetail.price;
       const shipping = shippingCost + insurance;
 
+      req.body.productPrice = lastPrice;
+      req.body.insurance = insurance; // insurance
       // set price
       if (productDetail.promo) {
         req.body.totalPrice = lastPrice * productDetail.promo.discount + shipping;
@@ -49,6 +51,35 @@ module.exports = {
   detail: async (req, res) => {
     try {
       const getDataDetail = await Models.findById(req.params.id);
+      responses.success(getDataDetail, res);
+    } catch (err) {
+      responses.error(String(err), res);
+    }
+  },
+  userTransactions: async (req, res) => {
+    // detect if query exist
+    const count = (req.query.count) ? parseInt(req.query.count, 10) : null;
+
+    try {
+      const getDataDetail = await Models.find({ idUser: req.params.id })
+        .limit(count);
+      responses.success(getDataDetail, res);
+    } catch (err) {
+      responses.error(String(err), res);
+    }
+  },
+  userBills: async (req, res) => {
+    // detect if query exist
+    const count = (req.query.count) ? parseInt(req.query.count, 10) : null;
+
+    try {
+      const getDataDetail = await Models.find({
+        $and: [
+          { idUser: req.params.id },
+          { paidStatus: false },
+        ],
+      })
+        .limit(count);
       responses.success(getDataDetail, res);
     } catch (err) {
       responses.error(String(err), res);

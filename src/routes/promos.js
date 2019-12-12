@@ -1,9 +1,10 @@
 const controllers = require('../controllers/promos');
 const Upload = require('../middleware/upload');
+const Auth = require('../middleware/auth');
 
 module.exports = (app) => {
   app.route('/promos')
-    .post(Upload, controllers.create);
+    .post(Auth, Upload, controllers.create);
 
   app.route('/promos/:id')
     .get(controllers.detail);
@@ -24,8 +25,8 @@ module.exports = (app) => {
     .get(controllers.few);
 
   app.route('/promos/:id')
-    .put(Upload, controllers.update);
+    .put(Auth, Upload, controllers.update);
 
   app.route('/promos/:id')
-    .delete(controllers.delete);
+    .delete(Auth, controllers.delete);
 };

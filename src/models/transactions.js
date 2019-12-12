@@ -22,6 +22,14 @@ const transactions = mongoose.Schema({
     type: Number,
     default: 10000,
   },
+  productPrice: {
+    type: Number,
+    default: 0,
+  },
+  insurance: {
+    type: Number,
+    default: 0,
+  },
   totalPrice: {
     type: Number,
     required: [true, 'totalPrice required'],

@@ -1,10 +1,11 @@
 const admin = require('../controllers/admins');
 // const tokenVerification = require('../middleware/auth');
 const Upload = require('../middleware/upload');
+const Auth = require('../middleware/auth');
 
 module.exports = (app) => {
   app.route('/admin/register')
-    .post(Upload, admin.register);
+    .post(Auth, Upload, admin.register);
 
   app.route('/admin/login')
     .post(admin.login);
@@ -19,8 +20,8 @@ module.exports = (app) => {
     .get(admin.detail);
 
   app.route('/admin/update/:id')
-    .put(Upload, admin.update);
+    .put(Auth, Upload, admin.update);
 
   app.route('/admin/delete/:id')
-    .delete(admin.delete);
+    .delete(Auth, admin.delete);
 };

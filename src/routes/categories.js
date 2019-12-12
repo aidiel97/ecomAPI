@@ -1,9 +1,10 @@
 const controllers = require('../controllers/categories');
+const Auth = require('../middleware/auth');
 // const Cache = require('../middleware/cache');
 
 module.exports = (app) => {
   app.route('/categories')
-    .post(controllers.create);
+    .post(Auth, controllers.create);
 
   app.route('/subcategories/:id')
     .post(controllers.createSub);
@@ -18,8 +19,8 @@ module.exports = (app) => {
     .get(controllers.few);
 
   app.route('/categories/:id')
-    .put(controllers.update);
+    .put(Auth, controllers.update);
 
   app.route('/categories/:id')
-    .delete(controllers.delete);
+    .delete(Auth, controllers.delete);
 };

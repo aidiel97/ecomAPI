@@ -1,8 +1,9 @@
 const controllers = require('../controllers/contactUs');
+const Auth = require('../middleware/auth');
 
 module.exports = (app) => {
   app.route('/contact-us')
-    .post(controllers.create);
+    .post(Auth, controllers.create);
 
   app.route('/contact-us/:id')
     .get(controllers.detail);
@@ -14,8 +15,8 @@ module.exports = (app) => {
     .get(controllers.few);
 
   app.route('/contact-us/:id')
-    .put(controllers.update);
+    .put(Auth, controllers.update);
 
   app.route('/contact-us/:id')
-    .delete(controllers.delete);
+    .delete(Auth, controllers.delete);
 };

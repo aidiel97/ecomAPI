@@ -1,8 +1,9 @@
 const controllers = require('../controllers/faqs');
+const Auth = require('../middleware/auth');
 
 module.exports = (app) => {
   app.route('/faq')
-    .post(controllers.create);
+    .post(Auth, controllers.create);
 
   app.route('/faq/:id')
     .get(controllers.detail);
@@ -14,8 +15,8 @@ module.exports = (app) => {
     .get(controllers.few);
 
   app.route('/faq/:id')
-    .put(controllers.update);
+    .put(Auth, controllers.update);
 
   app.route('/faq/:id')
-    .delete(controllers.delete);
+    .delete(Auth, controllers.delete);
 };
