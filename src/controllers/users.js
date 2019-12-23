@@ -114,7 +114,4 @@ module.exports = {
       responses.error(String(err), res);
     }
   },
-  // index : (req, res) => {
-  //   res.send('berhasil');
-  // }
 };
